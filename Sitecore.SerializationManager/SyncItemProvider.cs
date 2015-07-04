@@ -15,8 +15,13 @@ namespace Sitecore.SerializationManager
 
         public static void SaveSyncItem(SyncItem item, string path)
         {
-            TextWriter writer = (TextWriter)new StreamWriter((Stream)File.Create(path));
-            item.Serialize(writer);
+            using (var fileStream = File.Open(path, FileMode.Create, FileAccess.Write, FileShare.None))
+            {
+                using (var writer = new StreamWriter(fileStream))
+                {
+                    item.Serialize(writer);
+                }
+            }
         }
     }
 }
