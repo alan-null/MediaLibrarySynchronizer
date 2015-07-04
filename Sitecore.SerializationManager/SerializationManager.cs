@@ -1,10 +1,11 @@
 ﻿using System;
 using System.IO;
 using Sitecore.Data.Serialization.ObjectModel;
+using Sitecore.SerializationManager.Extensions;
 
 namespace Sitecore.SerializationManager
 {
-    public class Manager
+    public class SerializationManager
     {
         public void AttachFileToSerializationItem(string itemPath, string filePath)
         {
@@ -13,12 +14,8 @@ namespace Sitecore.SerializationManager
             byte[] bytes = ReadFile(filePath);
             var blobValue = System.Convert.ToBase64String(bytes, Base64FormattingOptions.InsertLineBreaks);
 
-            syncItem.RemoveSharedField(Constans.Blob);
-            syncItem.AddSharedField(Constans.Blob, "Blob", "blob", blobValue, true);
-
-            syncItem.RemoveSharedField(Constans.Size);
-            syncItem.AddSharedField(Constans.Size, "Size", "size", bytes.Length.ToString(), true);
-
+            syncItem.ChangeFieldValue(Constans.FieldIDs.Blob, blobValue);
+            syncItem.ChangeFieldValue(Constans.FieldIDs.Size, bytes.Length.ToString());
 
             SyncItemProvider.SaveSyncItem(syncItem, itemPath);
         }
