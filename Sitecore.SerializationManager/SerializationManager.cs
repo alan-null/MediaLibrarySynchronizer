@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using Sitecore.Data.Serialization.ObjectModel;
+using Sitecore.SerializationManager.Constants;
 using Sitecore.SerializationManager.Extensions;
 using Sitecore.SerializationManager.Models;
 
@@ -15,8 +16,8 @@ namespace Sitecore.SerializationManager
             byte[] bytes = ReadFile(filePath);
             var blobValue = System.Convert.ToBase64String(bytes, Base64FormattingOptions.InsertLineBreaks);
 
-            syncItem.ChangeFieldValue(Constans.FieldIDs.Blob, blobValue);
-            syncItem.ChangeFieldValue(Constans.FieldIDs.Size, bytes.Length.ToString());
+            syncItem.SetFieldValue(FileTemplateFields.Blob, blobValue);
+            syncItem.SetFieldValue(FileTemplateFields.Size, bytes.Length.ToString());
 
             SyncItemProvider.SaveSyncItem(syncItem, itemPath);
         }
@@ -25,10 +26,10 @@ namespace Sitecore.SerializationManager
         {
             SyncItem syncItem = SyncItemProvider.GetSyncItem(itemPath);
 
-            syncItem.RemoveField(Constans.FieldIDs.Blob);
-            syncItem.ChangeFieldValue(Constans.FieldIDs.Size, String.Empty);
-            syncItem.ChangeFieldValue(Constans.FieldIDs.Extension, String.Empty);
-            syncItem.ChangeFieldValue(Constans.FieldIDs.MimeType, String.Empty);
+            syncItem.RemoveField(FileTemplateFields.Blob.FieldId);
+            syncItem.SetFieldValue(FileTemplateFields.Size, String.Empty);
+            syncItem.SetFieldValue(FileTemplateFields.Extension, String.Empty);
+            syncItem.SetFieldValue(FileTemplateFields.MimeType, String.Empty);
 
             SyncItemProvider.SaveSyncItem(syncItem, itemPath);
         }
@@ -37,14 +38,14 @@ namespace Sitecore.SerializationManager
         {
             SyncItem syncItem = SyncItemProvider.GetSyncItem(itemPath);
 
-            string blobValue = syncItem.SharedValues[Constans.FieldIDs.Blob];
-            string extension = syncItem.SharedValues[Constans.FieldIDs.Extension];
+            string blobValue = syncItem.SharedValues[FileTemplateFields.Blob.FieldId];
+            string extension = syncItem.SharedValues[FileTemplateFields.Extension.FieldId];
             byte[] fromBase64String = System.Convert.FromBase64String(blobValue);
 
             return new SerializationFile(syncItem.Name, extension, fromBase64String);
         }
 
-        private byte[] ReadFile(string filePath)
+        private static byte[] ReadFile(string filePath)
         {
             byte[] buffer;
             FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);

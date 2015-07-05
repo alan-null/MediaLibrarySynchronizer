@@ -16,7 +16,7 @@ namespace Sitecore.SerializationManager.Forms
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new SerializationManager());
+            Application.Run(new SerializationManagerForm());
         }
     }
 }

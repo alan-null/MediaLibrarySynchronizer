@@ -2,17 +2,18 @@
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using Sitecore.SerializationManager.Models;
 
 namespace Sitecore.SerializationManager.Forms
 {
-    public partial class SerializationManager : Form
+    public partial class SerializationManagerForm : Form
     {
-        public Manager Manager { get; set; }
+        public SerializationManager Manager { get; set; }
 
-        public SerializationManager()
+        public SerializationManagerForm()
         {
             InitializeComponent();
-            Manager = new Manager();
+            Manager = new SerializationManager();
         }
 
         private void SerializationManager_Load(object sender, EventArgs e)
@@ -141,12 +142,45 @@ namespace Sitecore.SerializationManager.Forms
 
         private void DetachFileCommand()
         {
-            throw new NotImplementedException();
+            var itemName = listView1.SelectedItems;
+            if (itemName.Count > 0)
+            {
+                var itemPath = String.Format("{0}\\{1}", treeView1.SelectedNode.FullPath, itemName[0].Name);
+                if (IsValidFile(itemPath))
+                {
+                    Manager.DetachFileFromSerializationItem(itemPath);
+                }
+            }
+            else
+            {
+                MessageBox.Show(@"Please select '.item' file first");
+            }
         }
 
         private void DownloadFileCommand()
         {
-            throw new NotImplementedException();
+            var itemName = listView1.SelectedItems;
+            if (itemName.Count > 0)
+            {
+                var itemPath = String.Format("{0}\\{1}", treeView1.SelectedNode.FullPath, itemName[0].Name);
+                if (IsValidFile(itemPath))
+                {
+
+                    SerializationFile file = Manager.DownloadFileFromSerializationItem(itemPath);
+                    saveFileDialog1.DefaultExt = file.Extensions;
+                    saveFileDialog1.FileName = file.Name;
+                    if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+                    {
+                        string filePath = saveFileDialog1.FileName;
+                        File.WriteAllBytes(filePath, file.Blob);
+                    }
+
+                }
+            }
+            else
+            {
+                MessageBox.Show(@"Please select '.item' file first");
+            }
         }
 
         private static bool IsValidFile(string itemPath)
