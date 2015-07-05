@@ -2,6 +2,7 @@
 using System.IO;
 using Sitecore.Data.Serialization.ObjectModel;
 using Sitecore.SerializationManager.Extensions;
+using Sitecore.SerializationManager.Models;
 
 namespace Sitecore.SerializationManager
 {
@@ -18,6 +19,29 @@ namespace Sitecore.SerializationManager
             syncItem.ChangeFieldValue(Constans.FieldIDs.Size, bytes.Length.ToString());
 
             SyncItemProvider.SaveSyncItem(syncItem, itemPath);
+        }
+
+        public void DetachFileFromSerializationItem(string itemPath)
+        {
+            SyncItem syncItem = SyncItemProvider.GetSyncItem(itemPath);
+
+            syncItem.RemoveField(Constans.FieldIDs.Blob);
+            syncItem.ChangeFieldValue(Constans.FieldIDs.Size, String.Empty);
+            syncItem.ChangeFieldValue(Constans.FieldIDs.Extension, String.Empty);
+            syncItem.ChangeFieldValue(Constans.FieldIDs.MimeType, String.Empty);
+
+            SyncItemProvider.SaveSyncItem(syncItem, itemPath);
+        }
+
+        public SerializationFile DownloadFileFromSerializationItem(string itemPath)
+        {
+            SyncItem syncItem = SyncItemProvider.GetSyncItem(itemPath);
+
+            string blobValue = syncItem.SharedValues[Constans.FieldIDs.Blob];
+            string extension = syncItem.SharedValues[Constans.FieldIDs.Extension];
+            byte[] fromBase64String = System.Convert.FromBase64String(blobValue);
+
+            return new SerializationFile(syncItem.Name, extension, fromBase64String);
         }
 
         private byte[] ReadFile(string filePath)

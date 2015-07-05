@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="Constans.cs" />
     <Compile Include="Extensions\SyncItemExtenstions.cs" />
+    <Compile Include="Models\SerializationFile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SerializationManager.cs" />
     <Compile Include="SyncItemProvider.cs" />
