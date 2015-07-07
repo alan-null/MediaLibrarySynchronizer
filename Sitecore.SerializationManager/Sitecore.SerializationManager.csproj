@@ -42,14 +42,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MimeTypeResolver.cs" />
     <Compile Include="Constants\FileTemplateFields.cs" />
     <Compile Include="Extensions\SyncItemExtenstions.cs" />
+    <Compile Include="Models\MimeTypeInfo.cs" />
     <Compile Include="Models\SerializationFile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\MimeTypes.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MimeTypes.resx</DependentUpon>
+    </Compile>
     <Compile Include="SerializationManager.cs" />
     <Compile Include="SyncItemProvider.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\MimeTypes.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MimeTypes.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

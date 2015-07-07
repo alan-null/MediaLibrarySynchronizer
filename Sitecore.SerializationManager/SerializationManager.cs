@@ -15,9 +15,13 @@ namespace Sitecore.SerializationManager
 
             byte[] bytes = ReadFile(filePath);
             var blobValue = System.Convert.ToBase64String(bytes, Base64FormattingOptions.InsertLineBreaks);
+            string extension = new FileInfo(filePath).Extension.TrimStart('.');
+            string mimeType = MimeTypeResolver.Instance.ResolveMimeType(extension);
 
             syncItem.SetFieldValue(FileTemplateFields.Blob, blobValue);
             syncItem.SetFieldValue(FileTemplateFields.Size, bytes.Length.ToString());
+            syncItem.SetFieldValue(FileTemplateFields.Extension, extension);
+            syncItem.SetFieldValue(FileTemplateFields.MimeType, mimeType);
 
             SyncItemProvider.SaveSyncItem(syncItem, itemPath);
         }
