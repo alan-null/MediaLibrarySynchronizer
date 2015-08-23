@@ -18,12 +18,12 @@ namespace Sitecore.SerializationManager
         {
             get { return _instance ?? (_instance = new MimeTypeResolver()); }
         }
-        private readonly SafeDictionary<string, MimeTypeInfo> _mediaTypes = new SafeDictionary<string, MimeTypeInfo>(StringComparer.OrdinalIgnoreCase);
+        private readonly SafeDictionary<string, MediaTypeConfig> _mediaTypes = new SafeDictionary<string, MediaTypeConfig>(StringComparer.OrdinalIgnoreCase);
 
         private MimeTypeResolver()
         {
             XmlDocument doc = new XmlDocument();
-            doc.LoadXml(MimeTypes.Configuration);
+                doc.LoadXml(MimeTypes.Configuration);
             XmlNode newNode = doc.DocumentElement;
             ParseMediaTypes(newNode);
         }
@@ -34,15 +34,27 @@ namespace Sitecore.SerializationManager
             return mimeType ?? string.Empty;
         }
 
+        public string GetTemplate(string extension, bool versioned)
+        {
+            Assert.ArgumentNotNull((object)extension, "extension");
+            MediaTypeConfig mediaTypeConfig = GetMediaTypeInfoConfig(extension);
+            if (mediaTypeConfig == null)
+                return null;
+            if (!versioned)
+                return mediaTypeConfig.SharedTemplate;
+            return mediaTypeConfig.VersionedTemplate;
+        }
+
+
         private string GetMimeTypeFromConfig(string extension)
         {
-            MimeTypeInfo mediaTypeConfig = GetMediaTypeInfoConfig(extension);
+            MediaTypeConfig mediaTypeConfig = GetMediaTypeInfoConfig(extension);
             if (mediaTypeConfig == null)
                 return null;
             return mediaTypeConfig.MimeType;
         }
 
-        private MimeTypeInfo GetMediaTypeInfoConfig(string extension)
+        private MediaTypeConfig GetMediaTypeInfoConfig(string extension)
         {
             Assert.ArgumentNotNull(extension, "extension");
             lock (_mediaTypes.SyncRoot)
@@ -135,7 +147,7 @@ namespace Sitecore.SerializationManager
                         }
                         else
                         {
-                            MimeTypeInfo config = new MimeTypeInfo(XmlUtil.GetAttribute("name", configNode, attribute), attribute);
+                            MediaTypeConfig config = new MediaTypeConfig(XmlUtil.GetAttribute("name", configNode, attribute), attribute);
                             FillConfiguration(config, configNode, defaultNode);
                             _mediaTypes[ext] = config;
                         }
@@ -144,9 +156,11 @@ namespace Sitecore.SerializationManager
             }
         }
 
-        private void FillConfiguration(MimeTypeInfo config, XmlNode configNode, XmlNode defaultNode)
+        private void FillConfiguration(MediaTypeConfig config, XmlNode configNode, XmlNode defaultNode)
         {
             config.MimeType = GetChildValue("mimeType", configNode, defaultNode, config.MimeType);
+            config.SharedTemplate = GetChildValue("sharedTemplate", configNode, defaultNode, config.SharedTemplate);
+            config.VersionedTemplate = GetChildValue("versionedTemplate", configNode, defaultNode, config.VersionedTemplate);
         }
 
         private string GetChildValue(string nodeName, XmlNode node, XmlNode defaultNode, string oldValue)
