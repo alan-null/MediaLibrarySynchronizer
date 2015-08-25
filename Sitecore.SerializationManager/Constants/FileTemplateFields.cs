@@ -1,6 +1,8 @@
-﻿namespace Sitecore.SerializationManager.Constants
+﻿using Sitecore.SerializationManager.Models;
+
+namespace Sitecore.SerializationManager.Constants
 {
-    public sealed class FileTemplateFields
+    public class FileTemplateFields : IFieldInfo
     {
         private readonly string _name;
         private readonly string _id;

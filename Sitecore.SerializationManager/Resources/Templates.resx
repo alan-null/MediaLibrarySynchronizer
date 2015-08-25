@@ -130,7 +130,8 @@
     "system/media/unversioned/movie": "{e76adbdf-87d1-4fcb-ba71-274f7dbf5670}",
     "system/media/unversioned/mp3": "{b60424a5-ce06-4c2e-9f49-a6d732f55d4b}",
     "system/media/unversioned/pdf": "{0603f166-35b8-469f-8123-e8d87bedc171}",
-    "system/media/unversioned/zip": "{4f4a3a3b-239f-4988-98e1-da3779749cbc}"
+    "system/media/unversioned/zip": "{4f4a3a3b-239f-4988-98e1-da3779749cbc}",
+	"system/media/media folder": "{fe5dd826-48c6-436d-b87a-7c4210c7413b}"
 }</value>
   </data>
 </root>

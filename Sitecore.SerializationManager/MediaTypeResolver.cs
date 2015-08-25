@@ -11,16 +11,16 @@ using Sitecore.Xml;
 
 namespace Sitecore.SerializationManager
 {
-    public sealed class MimeTypeResolver
+    public sealed class MediaTypeResolver
     {
-        private static MimeTypeResolver _instance;
-        public static MimeTypeResolver Instance
+        private static MediaTypeResolver _instance;
+        public static MediaTypeResolver Instance
         {
-            get { return _instance ?? (_instance = new MimeTypeResolver()); }
+            get { return _instance ?? (_instance = new MediaTypeResolver()); }
         }
         private readonly SafeDictionary<string, MediaTypeConfig> _mediaTypes = new SafeDictionary<string, MediaTypeConfig>(StringComparer.OrdinalIgnoreCase);
 
-        private MimeTypeResolver()
+        private MediaTypeResolver()
         {
             XmlDocument doc = new XmlDocument();
                 doc.LoadXml(MimeTypes.Configuration);
@@ -79,7 +79,7 @@ namespace Sitecore.SerializationManager
             }
             catch (Exception ex)
             {
-                Log.Error("Error trying to determine MIME type for '" + extension + "'", ex, typeof(MimeTypeResolver));
+                Log.Error("Error trying to determine MIME type for '" + extension + "'", ex, typeof(MediaTypeResolver));
             }
             return null;
         }

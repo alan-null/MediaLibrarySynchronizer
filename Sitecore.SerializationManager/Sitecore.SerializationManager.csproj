@@ -45,11 +45,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MimeTypeResolver.cs" />
-    <Compile Include="Constants\FileTemplateFields.cs" />
+    <Compile Include="Constants\Paths.cs" />
+    <Compile Include="Constants\StatisticsTemplateFields.cs" />
     <Compile Include="Extensions\SyncItemExtenstions.cs" />
+    <Compile Include="MediaTypeResolver.cs" />
+    <Compile Include="Constants\FileTemplateFields.cs" />
+    <Compile Include="Extensions\SyncVersionExtenstions.cs" />
+    <Compile Include="Models\IFieldInfo.cs" />
+    <Compile Include="Models\ItemVersion.cs" />
     <Compile Include="Models\MediaTypeConfig.cs" />
     <Compile Include="Models\SerializationFile.cs" />
+    <Compile Include="Models\SerializationManagerConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\MimeTypes.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -64,6 +70,8 @@
     <Compile Include="SerializationManager.cs" />
     <Compile Include="SyncItemProvider.cs" />
     <Compile Include="TemplateIDResolver.cs" />
+    <Compile Include="Utils\SitecoreUtils.cs" />
+    <Compile Include="Utils\FileUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\MimeTypes.resx">

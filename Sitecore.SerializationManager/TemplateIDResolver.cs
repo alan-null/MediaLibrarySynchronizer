@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 using Sitecore.SerializationManager.Resources;
 
@@ -20,7 +22,8 @@ namespace Sitecore.SerializationManager
 
         public string GetTemplateId(string path)
         {
-            return _mappings[path];
+            string key = _mappings.Keys.Where(path.Contains).FirstOrDefault();
+            return key != null ? _mappings[key] : String.Empty;
         }
     }
 }

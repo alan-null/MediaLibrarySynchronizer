@@ -4,37 +4,33 @@ using Sitecore.Data.Serialization.ObjectModel;
 using Sitecore.SerializationManager.Constants;
 using Sitecore.SerializationManager.Extensions;
 using Sitecore.SerializationManager.Models;
+using Sitecore.SerializationManager.Utils;
 
 namespace Sitecore.SerializationManager
 {
     public class SerializationManager
     {
+        private readonly SerializationManagerConfig _config;
+        
+        public SerializationManager(SerializationManagerConfig config)
+        {
+            _config = config;
+        }
+
         public void AttachFileToSerializationItem(string itemPath, string filePath)
         {
             SyncItem syncItem = SyncItemProvider.GetSyncItem(itemPath);
-
-            byte[] bytes = ReadFile(filePath);
-            var blobValue = System.Convert.ToBase64String(bytes, Base64FormattingOptions.InsertLineBreaks);
-            string extension = new FileInfo(filePath).Extension.TrimStart('.');
-            string mimeType = MimeTypeResolver.Instance.ResolveMimeType(extension);
-
-            syncItem.SetFieldValue(FileTemplateFields.Blob, blobValue);
-            syncItem.SetFieldValue(FileTemplateFields.Size, bytes.Length.ToString());
-            syncItem.SetFieldValue(FileTemplateFields.Extension, extension);
-            syncItem.SetFieldValue(FileTemplateFields.MimeType, mimeType);
-
+            syncItem.AttachMediaFile(new FileInfo(filePath));
             SyncItemProvider.SaveSyncItem(syncItem, itemPath);
         }
 
         public void DetachFileFromSerializationItem(string itemPath)
         {
             SyncItem syncItem = SyncItemProvider.GetSyncItem(itemPath);
-
             syncItem.RemoveField(FileTemplateFields.Blob.FieldId);
             syncItem.SetFieldValue(FileTemplateFields.Size, String.Empty);
             syncItem.SetFieldValue(FileTemplateFields.Extension, String.Empty);
             syncItem.SetFieldValue(FileTemplateFields.MimeType, String.Empty);
-
             SyncItemProvider.SaveSyncItem(syncItem, itemPath);
         }
 
@@ -49,26 +45,36 @@ namespace Sitecore.SerializationManager
             return new SerializationFile(syncItem.Name, extension, fromBase64String);
         }
 
-        private static byte[] ReadFile(string filePath)
+        public SyncItem CreateSyncMediaItem(string itemPath, string parentID, string filePath)
         {
-            byte[] buffer;
-            FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-            try
-            {
-                int length = (int)fileStream.Length;  // get file length
-                buffer = new byte[length];            // create buffer
-                int count;                            // actual number of bytes read
-                int sum = 0;                          // total number of bytes read
+            FileInfo fileInfo = new FileInfo(filePath);
+            var templatePath = MediaTypeResolver.Instance.GetTemplate(fileInfo.Extension.TrimStart('.'), false);
+            SyncItem syncItem = CreateSyncItem(fileInfo.Name, itemPath, parentID, templatePath);
+            syncItem.AttachMediaFile(fileInfo);
+            return syncItem;
+        }
 
-                // read until Read method returns 0 (end of the stream has been reached)
-                while ((count = fileStream.Read(buffer, sum, length - sum)) > 0)
-                    sum += count;  // sum is a buffer offset for next reading
-            }
-            finally
+        public SyncItem CreateSyncMediaFolder(string name, string itemPath, string parentID)
+        {
+            SyncItem syncItem = CreateSyncItem(name, itemPath, parentID, Paths.MediaFolderPath);
+            return syncItem;
+        }
+
+        public SyncItem CreateSyncItem(string name, string itemPath, string parentID, string templatePath)
+        {
+            SyncItem syncItem = new SyncItem
             {
-                fileStream.Close();
-            }
-            return buffer;
+                ID = MainUtil.GetNewID(),
+                DatabaseName = _config.CurrentDatabase,
+                ItemPath = String.Format("{0}/{1}", itemPath, name),
+                ParentID = parentID,
+                Name = name,
+                MasterID = Guid.Empty.ToString(),
+                TemplateID = TemplateIdResolver.Instance.GetTemplateId(templatePath),
+                TemplateName = SitecoreUtils.GetTemplateName(templatePath)
+            };
+            syncItem.AddVersion(_config.BuildSyncVersion());
+            return syncItem;
         }
     }
 }
