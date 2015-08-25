@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sitecore.SerializationManager", "Sitecore.SerializationManager\Sitecore.SerializationManager.csproj", "{EA77F627-C267-4FDF-BC5C-150E3400685E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaLibrarySynchronizer.Converter", "MediaLibrarySynchronizer.Converter\MediaLibrarySynchronizer.Converter.csproj", "{6161280F-0DC6-467F-8EF0-ABFAAFFCB537}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{EA77F627-C267-4FDF-BC5C-150E3400685E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EA77F627-C267-4FDF-BC5C-150E3400685E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EA77F627-C267-4FDF-BC5C-150E3400685E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6161280F-0DC6-467F-8EF0-ABFAAFFCB537}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6161280F-0DC6-467F-8EF0-ABFAAFFCB537}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6161280F-0DC6-467F-8EF0-ABFAAFFCB537}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6161280F-0DC6-467F-8EF0-ABFAAFFCB537}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

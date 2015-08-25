@@ -5,11 +5,11 @@ using Sitecore.SerializationManager.Extensions;
 
 namespace Sitecore.SerializationManager.Models
 {
-    public abstract class SerializationManagerConfig
+    public class SerializationManagerConfig
     {
-        public abstract string CurrentUser { get; }
-        public abstract string CurrentDatabase { get; }
-        public abstract ItemVersion DefaultVersion { get; }
+        public virtual string CurrentUser { get; set; }
+        public virtual string CurrentDatabase { get; set; }
+        public virtual ItemVersion DefaultVersion { get; set; }
 
         public SyncVersion BuildSyncVersion()
         {

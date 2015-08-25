@@ -11,7 +11,7 @@ namespace Sitecore.SerializationManager
     public class SerializationManager
     {
         private readonly SerializationManagerConfig _config;
-        
+
         public SerializationManager(SerializationManagerConfig config)
         {
             _config = config;
@@ -49,7 +49,8 @@ namespace Sitecore.SerializationManager
         {
             FileInfo fileInfo = new FileInfo(filePath);
             var templatePath = MediaTypeResolver.Instance.GetTemplate(fileInfo.Extension.TrimStart('.'), false);
-            SyncItem syncItem = CreateSyncItem(fileInfo.Name, itemPath, parentID, templatePath);
+            string name = Path.GetFileNameWithoutExtension(fileInfo.Name);
+            SyncItem syncItem = CreateSyncItem(name, itemPath, parentID, templatePath);
             syncItem.AttachMediaFile(fileInfo);
             return syncItem;
         }

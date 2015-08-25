@@ -36,7 +36,7 @@ namespace Sitecore.SerializationManager
 
         public string GetTemplate(string extension, bool versioned)
         {
-            Assert.ArgumentNotNull((object)extension, "extension");
+            Assert.ArgumentNotNull(extension, "extension");
             MediaTypeConfig mediaTypeConfig = GetMediaTypeInfoConfig(extension);
             if (mediaTypeConfig == null)
                 return null;
