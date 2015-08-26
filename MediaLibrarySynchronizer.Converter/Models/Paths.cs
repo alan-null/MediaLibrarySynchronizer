@@ -27,7 +27,7 @@ namespace MediaLibrarySynchronizer.Converter.Models
             {
                 string path = SitecorePath.TrimEnd('/');
                 var i = path.LastIndexOf("/", StringComparison.Ordinal);
-                return System.IO.Path.Combine(SerializationFolder, Database, path.Substring(0, i));
+                return Path.Combine(SerializationFolder, Database, path.Substring(0, i));
             }
         }
     }

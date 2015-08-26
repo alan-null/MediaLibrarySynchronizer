@@ -22,7 +22,7 @@ namespace Sitecore.SerializationManager
 
         public string GetTemplateId(string path)
         {
-            string key = _mappings.Keys.Where(path.Contains).FirstOrDefault();
+            string key = _mappings.Keys.FirstOrDefault(s => path.ToLower().Contains(s.ToLower()));
             return key != null ? _mappings[key] : String.Empty;
         }
     }

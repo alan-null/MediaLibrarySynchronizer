@@ -6,6 +6,8 @@ using MediaLibrarySynchronizer.Converter.Models;
 using Sitecore.Data.Serialization;
 using Sitecore.Data.Serialization.ObjectModel;
 using Sitecore.SerializationManager;
+using Sitecore.SerializationManager.Constants;
+using Sitecore.SerializationManager.Extensions;
 using Sitecore.SerializationManager.Models;
 
 namespace MediaLibrarySynchronizer.Converter.Converters
@@ -35,7 +37,7 @@ namespace MediaLibrarySynchronizer.Converter.Converters
             if (!File.Exists(path.Destination.FullPath + PathUtils.Extension))
             {
                 SyncItem parent = SyncItemProvider.GetSyncItem(path.Destination.Parent + PathUtils.Extension);
-                var serializationFolder = _serializationManager.CreateSyncMediaFolder(new DirectoryInfo(path.Destination.FullPath).Name, parent.ItemPath, parent.ID);
+                var serializationFolder = _serializationManager.CreateSyncMediaFolder(new DirectoryInfo(path.Destination.FullPath).Name, path.Destination.Database, parent.ItemPath, parent.ID);
                 SyncItemProvider.SaveSyncItem(serializationFolder, path.Destination.FullPath + PathUtils.Extension);
             }
             var mediaFiles = GetFiles(path.SourcePath).Where(NameIsNotNullOrEmpty);
@@ -60,11 +62,16 @@ namespace MediaLibrarySynchronizer.Converter.Converters
                 if (File.Exists(syncItemPath))
                 {
                     SyncItem syncItem = SyncItemProvider.GetSyncItem(syncItemPath);
-                    //TODO Alter existing item if any changes were applied
+                    if (mediaFile.Blob != syncItem.SharedValues[FileTemplateFields.Blob.FieldId])
+                    {
+                        syncItem.AttachMediaFile(new FileInfo(mediaFile.FilePath));
+                        syncItem = _serializationManager.UpdateStatistics(syncItem);
+                        SyncItemProvider.SaveSyncItem(syncItem, syncItemPath);
+                    }
                 }
                 else
                 {
-                    SyncItem item = _serializationManager.CreateSyncMediaItem(parent.ItemPath, parent.ID, mediaFile.FilePath);
+                    SyncItem item = _serializationManager.CreateSyncMediaItem(parent.ItemPath, path.Destination.Database, parent.ID, mediaFile.FilePath);
                     SyncItemProvider.SaveSyncItem(item, syncItemPath);
                 }
             }

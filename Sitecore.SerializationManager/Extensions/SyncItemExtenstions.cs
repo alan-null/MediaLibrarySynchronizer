@@ -8,7 +8,7 @@ using Sitecore.SerializationManager.Utils;
 
 namespace Sitecore.SerializationManager.Extensions
 {
-    static class SyncItemExtenstions
+    public static class SyncItemExtenstions
     {
         public static SyncItem SetFieldValue(this SyncItem syncItem, FileTemplateFields fieldId, string value)
         {

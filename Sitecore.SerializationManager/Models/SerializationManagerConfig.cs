@@ -8,7 +8,6 @@ namespace Sitecore.SerializationManager.Models
     public class SerializationManagerConfig
     {
         public virtual string CurrentUser { get; set; }
-        public virtual string CurrentDatabase { get; set; }
         public virtual ItemVersion DefaultVersion { get; set; }
 
         public SyncVersion BuildSyncVersion()

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using Sitecore.Data.Serialization.ObjectModel;
 using Sitecore.SerializationManager.Constants;
 using Sitecore.SerializationManager.Extensions;
@@ -45,28 +46,52 @@ namespace Sitecore.SerializationManager
             return new SerializationFile(syncItem.Name, extension, fromBase64String);
         }
 
-        public SyncItem CreateSyncMediaItem(string itemPath, string parentID, string filePath)
+        public SyncItem CreateSyncMediaItem(string itemPath, string database, string parentID, string filePath)
         {
             FileInfo fileInfo = new FileInfo(filePath);
             var templatePath = MediaTypeResolver.Instance.GetTemplate(fileInfo.Extension.TrimStart('.'), false);
             string name = Path.GetFileNameWithoutExtension(fileInfo.Name);
-            SyncItem syncItem = CreateSyncItem(name, itemPath, parentID, templatePath);
+            SyncItem syncItem = CreateSyncItem(name, database, itemPath, parentID, templatePath);
             syncItem.AttachMediaFile(fileInfo);
             return syncItem;
         }
 
-        public SyncItem CreateSyncMediaFolder(string name, string itemPath, string parentID)
+        public SyncItem CreateSyncMediaFolder(string name, string database, string itemPath, string parentID)
         {
-            SyncItem syncItem = CreateSyncItem(name, itemPath, parentID, Paths.MediaFolderPath);
+            SyncItem syncItem = CreateSyncItem(name, database, itemPath, parentID, Paths.MediaFolderPath);
             return syncItem;
         }
 
-        public SyncItem CreateSyncItem(string name, string itemPath, string parentID, string templatePath)
+        public SyncItem UpdateStatistics(SyncItem syncItem)
+        {
+            SyncVersion versionToUpdate = GetVersionToUpdate(syncItem);
+            int index = syncItem.Versions.IndexOf(versionToUpdate);
+            SyncVersion syncVersion = syncItem.Versions[index];
+            syncVersion.SetFieldValue(StatisticsTemplateFields.Updated, DateUtil.IsoNowWithTicks);
+            syncVersion.SetFieldValue(StatisticsTemplateFields.UpdatedBy, _config.CurrentUser);
+            return syncItem;
+        }
+
+        private SyncVersion GetVersionToUpdate(SyncItem syncItem)
+        {
+            SyncVersion versionToUpdate = syncItem.Versions.FirstOrDefault(v => _config.DefaultVersion.Equals(v));
+            if (versionToUpdate != null)
+            {
+                versionToUpdate = syncItem.Versions.FirstOrDefault(v => v.Language == _config.DefaultVersion.Language);
+                if (versionToUpdate != null)
+                {
+                    versionToUpdate = syncItem.Versions.FirstOrDefault();
+                }
+            }
+            return versionToUpdate;
+        }
+
+        private SyncItem CreateSyncItem(string name, string database, string itemPath, string parentID, string templatePath)
         {
             SyncItem syncItem = new SyncItem
             {
                 ID = MainUtil.GetNewID(),
-                DatabaseName = _config.CurrentDatabase,
+                DatabaseName = database,
                 ItemPath = String.Format("{0}/{1}", itemPath, name),
                 ParentID = parentID,
                 Name = name,
