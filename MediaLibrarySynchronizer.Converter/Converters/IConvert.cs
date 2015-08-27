@@ -1,6 +1,6 @@
 ﻿namespace MediaLibrarySynchronizer.Converter.Converters
 {
-    interface IConvert
+    public interface IConvert
     {
         void Convert();
     }

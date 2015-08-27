@@ -2,20 +2,20 @@ using MediaLibrarySynchronizer.Converter.Models;
 
 namespace MediaLibrarySynchronizer.Converter.Converters
 {
-    public class FileToSyncItemConviguration
+    public class FileToSyncItemConfiguration
     {
         public string SourcePath { get; set; }
         public Paths Destination { get; set; }
 
-        public FileToSyncItemConviguration() { }
+        public FileToSyncItemConfiguration() { }
 
-        public FileToSyncItemConviguration(string sourcePath, Paths destination)
+        public FileToSyncItemConfiguration(string sourcePath, Paths destination)
         {
             Destination = destination;
             SourcePath = sourcePath;
         }
 
-        public FileToSyncItemConviguration(FileToSyncItemConviguration source)
+        public FileToSyncItemConfiguration(FileToSyncItemConfiguration source)
         {
             SourcePath = source.SourcePath;
             Destination = new Paths

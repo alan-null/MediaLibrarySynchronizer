@@ -15,7 +15,7 @@ namespace MediaLibrarySynchronizer.Converter.Models
         {
             get { return Path.Combine(DataFolder, "serialization"); }
         }
-
+        
         public string FullPath
         {
             get { return Path.Combine(SerializationFolder, Database, SitecorePath); }

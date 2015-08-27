@@ -1,0 +1,19 @@
+﻿{
+    "SerializationManagerConfig": {
+        "CurrentUser": "sitecore/admin",
+        "DefaultVersion": {
+            "Language": "en",
+            "Version": "1"
+        }
+    },
+    "SynchronizationConfig": [
+        {
+            "SourcePath": "C:/REPOSITORIES/Example/UI/themes/theme1",
+            "Destination": {
+                "DataFolder": "C:/WWW/Example/Data",
+                "Database": "master",
+                "SitecorePath": "sitecore/media library/themes/theme1"
+            }
+        }
+    ]
+}

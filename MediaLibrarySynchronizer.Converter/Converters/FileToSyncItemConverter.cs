@@ -14,10 +14,10 @@ namespace MediaLibrarySynchronizer.Converter.Converters
 {
     public class FileToSyncItemConverter : IConvert
     {
-        private readonly FileToSyncItemConviguration _config;
+        private readonly FileToSyncItemConfiguration _config;
         private readonly SerializationManager _serializationManager;
 
-        public FileToSyncItemConverter(FileToSyncItemConviguration config, SerializationManagerConfig serializationManager)
+        public FileToSyncItemConverter(FileToSyncItemConfiguration config, SerializationManagerConfig serializationManager)
         {
             _config = config;
             _serializationManager = new SerializationManager(serializationManager);
@@ -28,7 +28,7 @@ namespace MediaLibrarySynchronizer.Converter.Converters
             ConvertFolder(_config);
         }
 
-        private void ConvertFolder(FileToSyncItemConviguration path)
+        private void ConvertFolder(FileToSyncItemConfiguration path)
         {
             if (!Directory.Exists(path.Destination.FullPath))
             {
@@ -50,7 +50,7 @@ namespace MediaLibrarySynchronizer.Converter.Converters
             return !String.IsNullOrEmpty(Path.GetFileNameWithoutExtension(arg.Name));
         }
 
-        private void ConvertMediaFile(MediaFile mediaFile, FileToSyncItemConviguration path)
+        private void ConvertMediaFile(MediaFile mediaFile, FileToSyncItemConfiguration path)
         {
             if (File.Exists(path.Destination.FullPath + PathUtils.Extension))
             {
@@ -77,11 +77,11 @@ namespace MediaLibrarySynchronizer.Converter.Converters
             }
         }
 
-        private void ConvertFolders(FileToSyncItemConviguration path)
+        private void ConvertFolders(FileToSyncItemConfiguration path)
         {
             foreach (DirectoryInfo directoryInfo in GetFolders(path.SourcePath))
             {
-                var newConfig = new FileToSyncItemConviguration(path)
+                var newConfig = new FileToSyncItemConfiguration(path)
                 {
                     SourcePath = directoryInfo.FullName,
                     Destination =
